@@ -1,49 +1,9 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36" version="24.8.6">
-  <diagram name="Page-1" id="zPxilQzIKm8KHZhRzOK3">
-    <mxGraphModel dx="1434" dy="761" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+  <diagram name="Page-1" id="F79vd_hSANMIj4pwtM-F">
+    <mxGraphModel>
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="bpH8EMxP9eeq_GdCsPF2-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="bpH8EMxP9eeq_GdCsPF2-1" target="bpH8EMxP9eeq_GdCsPF2-4" edge="1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="bpH8EMxP9eeq_GdCsPF2-22" value="Token" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="bpH8EMxP9eeq_GdCsPF2-21" vertex="1" connectable="0">
-          <mxGeometry x="-0.431" y="-2" relative="1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="bpH8EMxP9eeq_GdCsPF2-1" value="User interface" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="10" y="250" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="bpH8EMxP9eeq_GdCsPF2-3" value="Auth provider" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="300" y="80" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="bpH8EMxP9eeq_GdCsPF2-4" value="Backend" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="360" y="255" width="120" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="bpH8EMxP9eeq_GdCsPF2-6" value="Token validation" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="bpH8EMxP9eeq_GdCsPF2-3" target="bpH8EMxP9eeq_GdCsPF2-4" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="320" y="100" as="sourcePoint" />
-            <mxPoint x="380" y="235" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="360" y="170" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="bpH8EMxP9eeq_GdCsPF2-7" value="Database" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
-          <mxGeometry x="650" y="240" width="60" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="bpH8EMxP9eeq_GdCsPF2-8" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="bpH8EMxP9eeq_GdCsPF2-4" target="bpH8EMxP9eeq_GdCsPF2-7" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="500" y="260" as="sourcePoint" />
-            <mxPoint x="550" y="210" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="bpH8EMxP9eeq_GdCsPF2-23" value="Data" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="bpH8EMxP9eeq_GdCsPF2-8" vertex="1" connectable="0">
-          <mxGeometry x="-0.12" y="-2" relative="1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
