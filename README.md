@@ -6,5 +6,5 @@
 
 ##Project Stack
 - React
-- Nestjs/Koajs/Honojs - help would be appriciated :) 
+- Nestjs in Nodejs environment 
 - Postgres SQL
