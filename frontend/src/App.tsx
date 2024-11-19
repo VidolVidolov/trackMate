@@ -15,6 +15,7 @@ function App() {
         </a>
       </div>
       <h1>TrackMate</h1>
+      <button className="btn btn-primary">Button</button>
     </>
   );
 }
