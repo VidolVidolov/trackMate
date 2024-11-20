@@ -6,7 +6,7 @@
 
 ##Project Stack
 ### Frontend
-- React, daisyUI, Zustand, React Router, Tanstack Query, Socket.io, @googlemaps/js-api-loader, react-geolocated
+- React, daisyUI, Zustand, React Router, Tanstack Query, socket.io-client, @googlemaps/js-api-loader, react-geolocated
 
 ### Backend
 - Nestjs in Nodejs environment
