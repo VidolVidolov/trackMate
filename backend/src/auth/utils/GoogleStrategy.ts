@@ -18,7 +18,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  //TODO: figure out refresh token
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
     const userToValidate = {
       email: 'Unknown email',

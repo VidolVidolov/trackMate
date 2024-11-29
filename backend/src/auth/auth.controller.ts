@@ -8,16 +8,17 @@ export class AuthController {
   @Get('/google/login')
   @UseGuards(GoogleAuthGuard)
   handleLogin() {
-    return { msg: 'Auth' };
+    return { msg: 'Auth' }; //TODO: What to do with this now?
   }
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
   handleRedirect() {
+    //TODO: Redirect to the frontendApp
     return { msg: 'Auth OK' };
   }
 
-  @Get('status')
+  @Get('user/status')
   user(@Req() request: Request) {
     if (request.user) {
       return { msg: 'Authenticated' };

@@ -16,7 +16,7 @@ import { SessionSerializer } from './utils/Serializer';
       provide: AUTH_SERVICE,
       useClass: AuthService,
     },
-    PrismaService, // is it okay Like this? ot place it everytime
+    PrismaService, //TODO: is it okay Like this? ot place it everytime
   ],
 })
 export class AuthModule {}
