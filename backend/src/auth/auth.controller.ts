@@ -20,7 +20,7 @@ export class AuthController {
   @Get('/google/login')
   @UseGuards(GoogleAuthGuard)
   handleLogin() {
-    return { msg: 'Auth' }; //TODO: What to do with this now?
+    return { msg: 'Successful login' }; //TODO: What to do with this now?
   }
 
   @Get('google/redirect')

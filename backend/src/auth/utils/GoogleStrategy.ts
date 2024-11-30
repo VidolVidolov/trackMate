@@ -6,6 +6,7 @@ import { AuthService } from '../auth.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
+  //TODO: what is the correct way of injecting the dependencies?
   constructor(@Inject('AUTH_SERVICE') private authService: AuthService) {
     super({
       clientID: process.env.GOOGLE_OAUTH_CLIENT_ID,

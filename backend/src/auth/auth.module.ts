@@ -21,7 +21,7 @@ import jwtConfig from './config/jwt.config';
     JwtStrategy,
     SessionSerializer,
     {
-      provide: AUTH_SERVICE,
+      provide: AUTH_SERVICE, //TODO: what is the better approach, like this or the default one
       useClass: AuthService,
     },
     PrismaService, //TODO: is it okay Like this? ot place it everytime
