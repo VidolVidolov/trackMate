@@ -1,10 +1,22 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 
 import { GoogleAuthGuard } from './utils/Guards';
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { AuthService } from './auth.service';
+import { AUTH_SERVICE } from 'src/consts/moduleNames';
 
 @Controller('auth')
 export class AuthController {
+  constructor(@Inject(AUTH_SERVICE) private authService: AuthService) {}
+
   @Get('/google/login')
   @UseGuards(GoogleAuthGuard)
   handleLogin() {
@@ -13,9 +25,22 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  handleRedirect() {
+  handleRedirect(@Req() request: Request, @Res() response: Response) {
+    if (!request.user) {
+      throw new UnauthorizedException();
+    }
+
+    //TODO: Find a way to fix it
+    //@ts-ignore
+    const userId = request.user.id;
+
+    const jwdAccessToken = this.authService.generateAccessToken(userId);
+    //TODO: Generate refresh tokens
+
     //TODO: Redirect to the frontendApp
-    return { msg: 'Auth OK' };
+    response
+      .status(200)
+      .json({ userInfo: request.user, token: jwdAccessToken });
   }
 
   @Get('user/status')
