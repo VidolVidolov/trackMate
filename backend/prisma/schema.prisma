@@ -13,6 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//TODO: how to make the id not be required when creating a user: Omit<User, "id"> scenario
 model User {
   id            Int       @id @default(autoincrement())
   name          String
