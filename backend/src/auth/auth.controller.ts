@@ -37,10 +37,9 @@ export class AuthController {
     const jwdAccessToken = this.authService.generateAccessToken(userId);
     //TODO: Generate refresh tokens
 
-    //TODO: Redirect to the frontendApp
     response
       .status(200)
-      .json({ userInfo: request.user, token: jwdAccessToken });
+      .redirect(`http://localhost:5173?token=${jwdAccessToken}`);
   }
 
   @Get('user/status')
