@@ -23,7 +23,7 @@ export class AuthService {
     return newUser;
   }
 
-  async findUser(id: number) {
+  async findUserById(id: number) {
     const user = this.authRepository.findUserById(id);
     return user;
   }
