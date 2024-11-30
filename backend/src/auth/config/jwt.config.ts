@@ -1,6 +1,7 @@
 import { JwtModuleOptions } from '@nestjs/jwt';
 import { registerAs } from '@nestjs/config';
 
+//TODO: is it good approach or just inserting the env variables where needed is just the exact same this?
 export default registerAs(
   'jwt',
   (): JwtModuleOptions => ({
