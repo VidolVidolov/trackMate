@@ -23,6 +23,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     const userToValidate = {
       email: 'Unknown email',
       name: profile.displayName,
+      hashedRefreshToken: '',
       typeOfVehicle: null,
       createdAt: new Date(),
       lastLogin: new Date(),

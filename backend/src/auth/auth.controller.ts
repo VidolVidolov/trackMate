@@ -14,6 +14,7 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { AUTH_SERVICE } from 'src/consts/moduleNames';
 import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth/refresh-jwt-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -27,7 +28,7 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  handleRedirect(@Req() request: Request, @Res() response: Response) {
+  async handleRedirect(@Req() request: Request, @Res() response: Response) {
     if (!request.user) {
       throw new UnauthorizedException();
     }
@@ -37,7 +38,7 @@ export class AuthController {
     const userId = request.user.id;
 
     const { accessToken, refreshToken } =
-      this.authService.generateTokens(userId);
+      await this.authService.getTokens(userId);
     response
       .status(200)
       .redirect(
@@ -62,5 +63,14 @@ export class AuthController {
     } else {
       return { msg: 'Not Atuthenticated' };
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('signout')
+  signOut(@Req() request: Request) {
+    //TODO: Find a way to fix it
+    //@ts-ignore
+    const userId = request.user.id;
+    this.authService.signOut(userId);
   }
 }

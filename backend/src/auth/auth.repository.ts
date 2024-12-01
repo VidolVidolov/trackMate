@@ -11,15 +11,4 @@ export class AuthRepository {
       data: userDetails,
     });
   }
-
-  async findUserByEmail(email: string) {
-    return await this.prismaService.user.findUnique({
-      where: { email },
-    });
-  }
-  async findUserById(id: number) {
-    return await this.prismaService.user.findUnique({
-      where: { id },
-    });
-  }
 }

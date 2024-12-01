@@ -10,6 +10,9 @@ import { Module } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { RefreshJwtStrategy } from './utils/RefreshJwtStrategy';
 import { SessionSerializer } from './utils/Serializer';
+import { UserModule } from 'src/user/user.module';
+import { UserRepository } from 'src/user/user.repository';
+import { UserService } from 'src/user/user.service';
 import jwtConfig from './config/jwt.config';
 import refreshJwtConfig from './config/refresh-jwt.config';
 
@@ -18,11 +21,13 @@ import refreshJwtConfig from './config/refresh-jwt.config';
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(refreshJwtConfig),
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [
     GoogleStrategy,
     JwtStrategy,
+    RefreshJwtStrategy,
     SessionSerializer,
     {
       provide: AUTH_SERVICE, //TODO: what is the better approach, like this or the default one
@@ -30,7 +35,8 @@ import refreshJwtConfig from './config/refresh-jwt.config';
     },
     PrismaService, //TODO: is it okay Like this? ot place it everytime
     AuthRepository,
-    RefreshJwtStrategy,
+    UserService, //TODO: isn't it strange that i need to import UserService AND UserRepository?
+    UserRepository,
   ],
 })
 export class AuthModule {}
