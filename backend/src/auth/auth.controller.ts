@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Inject,
+  Post,
   Req,
   Res,
   UnauthorizedException,
@@ -12,6 +13,7 @@ import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { AUTH_SERVICE } from 'src/consts/moduleNames';
+import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth/refresh-jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -34,12 +36,23 @@ export class AuthController {
     //@ts-ignore
     const userId = request.user.id;
 
-    const jwdAccessToken = this.authService.generateAccessToken(userId);
-    //TODO: Generate refresh tokens
-
+    const { accessToken, refreshToken } =
+      this.authService.generateTokens(userId);
     response
       .status(200)
-      .redirect(`http://localhost:5173?token=${jwdAccessToken}`);
+      .redirect(
+        `http://localhost:5173?token=${accessToken}&refresh=${refreshToken}`,
+      );
+  }
+
+  @UseGuards(RefreshJwtAuthGuard)
+  @Post('refresh')
+  refreshToken(@Req() request: Request) {
+    if (!request.user) {
+      throw new UnauthorizedException();
+    }
+    //@ts-ignore
+    return this.authService.refreshAccessToken(request.user.id);
   }
 
   @Get('user/status')

@@ -1,9 +1,11 @@
 import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { AuthRepository } from './auth.repository';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/database/prisma.service';
 import { User } from '@prisma/client';
+import refreshJwtConfig from './config/refresh-jwt.config';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +13,8 @@ export class AuthService {
     private prismaService: PrismaService,
     private jwtService: JwtService,
     private authRepository: AuthRepository,
+    @Inject(refreshJwtConfig.KEY)
+    private refreshTokenConfig: ConfigType<typeof refreshJwtConfig>,
   ) {}
   async validateUser(userDetails: Omit<User, 'id'>) {
     const user = await this.authRepository.findUserByEmail(userDetails.email);
@@ -28,8 +32,17 @@ export class AuthService {
     return user;
   }
 
-  generateAccessToken(userId: number) {
+  generateTokens(userId: number) {
     const payload: AuthJwtPayload = { sub: userId };
-    return this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(payload);
+    const refreshToken = this.jwtService.sign(payload, this.refreshTokenConfig);
+    return { accessToken, refreshToken };
+  }
+
+  refreshAccessToken(userId: number) {
+    const payload: AuthJwtPayload = { sub: userId };
+    const accessToken = this.jwtService.sign(payload);
+
+    return { accessToken };
   }
 }
