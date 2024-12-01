@@ -20,6 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   validate(payload: AuthJwtPayload) {
+    //TODO: Should i revoke access token as well?
     return { id: payload.sub };
   }
 }
