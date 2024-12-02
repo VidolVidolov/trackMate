@@ -26,4 +26,10 @@ export class UserRepository {
       data: { hashedRefreshToken },
     });
   }
+
+  async deleteUser(userId: number) {
+    return await this.prismaService.user.delete({
+      where: { id: userId },
+    });
+  }
 }

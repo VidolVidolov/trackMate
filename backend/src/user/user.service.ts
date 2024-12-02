@@ -27,4 +27,8 @@ export class UserService {
       hashedRefreshToken,
     );
   }
+
+  async deleteUser(userId: number) {
+    return await this.userRepository.deleteUser(userId);
+  }
 }

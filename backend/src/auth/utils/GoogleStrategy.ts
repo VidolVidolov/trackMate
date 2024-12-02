@@ -3,6 +3,7 @@ import { Profile, Strategy } from 'passport-google-oauth20';
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { AuthService } from '../auth.service';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
@@ -24,6 +25,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
       email: 'Unknown email',
       name: profile.displayName,
       hashedRefreshToken: '',
+      role: Role.USER,
       typeOfVehicle: null,
       createdAt: new Date(),
       lastLogin: new Date(),

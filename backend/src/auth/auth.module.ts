@@ -31,7 +31,7 @@ import refreshJwtConfig from './config/refresh-jwt.config';
       provide: AUTH_SERVICE, //TODO: what is the better approach, like this or the default one
       useClass: AuthService,
     },
-    PrismaService, //TODO: is it okay Like this? ot place it everytime
+    PrismaService, //TODO: is it okay Like this? to place it everytime
     AuthRepository,
   ],
 })
