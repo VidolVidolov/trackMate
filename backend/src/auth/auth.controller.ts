@@ -15,18 +15,21 @@ import { AuthService } from './auth.service';
 import { AUTH_SERVICE } from 'src/consts/moduleNames';
 import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth/refresh-jwt-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
+import { Public } from './decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(@Inject(AUTH_SERVICE) private authService: AuthService) {}
 
   @Get('/google/login')
+  @Public()
   @UseGuards(GoogleAuthGuard)
   handleLogin() {
     return { msg: 'Successful login' }; //TODO: What to do with this now?
   }
 
   @Get('google/redirect')
+  @Public()
   @UseGuards(GoogleAuthGuard)
   async handleRedirect(@Req() request: Request, @Res() response: Response) {
     if (!request.user) {
@@ -65,7 +68,6 @@ export class AuthController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('signout')
   signOut(@Req() request: Request) {
     //TODO: Find a way to fix it

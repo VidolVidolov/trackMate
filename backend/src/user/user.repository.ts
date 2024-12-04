@@ -28,8 +28,14 @@ export class UserRepository {
   }
 
   async deleteUser(userId: number) {
-    return await this.prismaService.user.delete({
-      where: { id: userId },
-    });
+    try {
+      return await this.prismaService.user.delete({
+        where: { id: userId },
+      });
+    } catch (error) {
+      console.log('-------------------'); //how to handle errors in nestjs and propagate it to the frontend
+      console.log(error);
+      console.log('-------------------');
+    }
   }
 }
