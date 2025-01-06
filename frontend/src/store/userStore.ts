@@ -1,5 +1,6 @@
 import { StoreApi, UseBoundStore, create } from "zustand";
 
+import { axiosInstance } from "services/config";
 import { devtools } from "zustand/middleware";
 
 const userStore: UseBoundStore<
@@ -13,7 +14,11 @@ const userStore: UseBoundStore<
   devtools((set) => ({
     accessToken: "",
     refreshToken: "",
-    setAccessToken: (accessToken: string) => set((state) => ({ accessToken })),
+    setAccessToken: (accessToken: string) =>
+      set((state) => {
+        axiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`;
+        return { accessToken };
+      }),
     setRefreshToken: (refreshToken: string) =>
       set((state) => ({ refreshToken })),
   }))

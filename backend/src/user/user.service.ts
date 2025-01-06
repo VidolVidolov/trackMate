@@ -10,8 +10,7 @@ export class UserService {
   ) {}
 
   async getProfile(id: number) {
-    const user = await this.userRepository.findUserById(id);
-    return user;
+    return this.userRepository.findUserById(id);
   }
 
   async findUserByEmail(email: string) {
@@ -30,5 +29,9 @@ export class UserService {
 
   async deleteUser(userId: number) {
     return await this.userRepository.deleteUser(userId);
+  }
+
+  async updateUserLastLoginTime(userId: number) {
+    return this.userRepository.updateUserLastLoginTime(userId);
   }
 }

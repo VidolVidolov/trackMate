@@ -33,7 +33,20 @@ export class UserRepository {
         where: { id: userId },
       });
     } catch (error) {
-      console.log('-------------------'); //how to handle errors in nestjs and propagate it to the frontend
+      console.log('-------------------'); //TODO: how to handle errors in nestjs and propagate it to the frontend
+      console.log(error);
+      console.log('-------------------');
+    }
+  }
+
+  async updateUserLastLoginTime(userId: number) {
+    try {
+      return await this.prismaService.user.update({
+        where: { id: userId },
+        data: { lastLogin: new Date() },
+      });
+    } catch (error) {
+      console.log('-------------------');
       console.log(error);
       console.log('-------------------');
     }
