@@ -1,5 +1,5 @@
 model User {
-    id                 Int       @id @default(autoincrement())
+    id                 Int       @id @unique @default(autoincrement())
     name               String
     email              String    @unique
     role               Role      @default(USER)
@@ -7,9 +7,11 @@ model User {
     typeOfVehicle      String?
     createdAt          DateTime? @default(now())
     lastLogin          DateTime? @default(now())
-    lastKnownLocation  Location? @relation("Location")
-    party              Party[]
+    lastKnownLocation  Location? @relation("LocationToUser")
+    party              Party?    @relation(fields: [partyId], references: [id])
+    partyId            Int?
     ownedParty         Party?    @relation("Owner")
+    ownedPartyId       Int?
 }
 
 enum Role {

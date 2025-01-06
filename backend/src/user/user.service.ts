@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { PartyService } from 'src/party/party.service';
 import { PrismaService } from 'src/database/prisma.service';
 import { UserRepository } from './user.repository';
 
@@ -7,6 +8,7 @@ export class UserService {
   constructor(
     private prismaService: PrismaService,
     private userRepository: UserRepository,
+    private partyService: PartyService,
   ) {}
 
   async getProfile(id: number) {
@@ -33,5 +35,16 @@ export class UserService {
 
   async updateUserLastLoginTime(userId: number) {
     return this.userRepository.updateUserLastLoginTime(userId);
+  }
+
+  async updateUserParty(userId: number, partyId: number) {
+    return this.userRepository.updateUserParty(userId, partyId);
+  }
+  async updateUserOwnedParty(userId: number, partyId: number) {
+    return this.userRepository.updateUserOwnedParty(userId, partyId);
+  }
+
+  async getUserParty(userId: number) {
+    return this.partyService.getPartyByUserId(userId);
   }
 }

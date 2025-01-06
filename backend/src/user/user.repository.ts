@@ -51,4 +51,30 @@ export class UserRepository {
       console.log('-------------------');
     }
   }
+
+  async updateUserParty(userId: number, partyId: number) {
+    try {
+      return await this.prismaService.user.update({
+        where: { id: userId },
+        data: { partyId },
+      });
+    } catch (error) {
+      console.log('-------------------');
+      console.log(error);
+      console.log('-------------------');
+    }
+  }
+
+  async updateUserOwnedParty(userId: number, ownedPartyId: number) {
+    try {
+      return await this.prismaService.user.update({
+        where: { id: userId },
+        data: { ownedPartyId },
+      });
+    } catch (error) {
+      console.log('-------------------');
+      console.log(error);
+      console.log('-------------------');
+    }
+  }
 }
