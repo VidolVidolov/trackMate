@@ -8,37 +8,43 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-
-import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 import { Request, Response } from 'express';
-import { AuthService } from './auth.service';
 import { AUTH_SERVICE } from 'src/consts/moduleNames';
-import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth/refresh-jwt-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
+import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
+import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
+import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth/refresh-jwt-auth.guard';
+import { RequestWithUser } from './types/RequestWithUser';
+import { UserService } from 'src/user/user.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(@Inject(AUTH_SERVICE) private authService: AuthService) {}
+  constructor(
+    @Inject(AUTH_SERVICE) private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   @Get('/google/login')
   @Public()
   @UseGuards(GoogleAuthGuard)
   handleLogin() {
-    return { msg: 'Successful login' }; //TODO: What to do with this now?
+    return { msg: 'Successful login' };
   }
 
   @Get('google/redirect')
   @Public()
   @UseGuards(GoogleAuthGuard)
-  async handleRedirect(@Req() request: Request, @Res() response: Response) {
+  async handleRedirect(
+    @Req() request: RequestWithUser,
+    @Res() response: Response,
+  ) {
     if (!request.user) {
       throw new UnauthorizedException();
     }
 
-    //TODO: Find a way to fix it
-    //@ts-ignore
     const userId = request.user.id;
+
+    await this.userService.updateUserLastLoginTime(userId);
 
     const { accessToken, refreshToken } =
       await this.authService.getTokens(userId);
@@ -51,11 +57,11 @@ export class AuthController {
 
   @UseGuards(RefreshJwtAuthGuard)
   @Post('refresh')
-  refreshToken(@Req() request: Request) {
+  refreshToken(@Req() request: RequestWithUser) {
     if (!request.user) {
       throw new UnauthorizedException();
     }
-    //@ts-ignore
+
     return this.authService.refreshAccessToken(request.user.id);
   }
 
@@ -69,9 +75,7 @@ export class AuthController {
   }
 
   @Post('signout')
-  signOut(@Req() request: Request) {
-    //TODO: Find a way to fix it
-    //@ts-ignore
+  signOut(@Req() request: RequestWithUser) {
     const userId = request.user.id;
     this.authService.signOut(userId);
   }

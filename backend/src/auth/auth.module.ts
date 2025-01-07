@@ -9,7 +9,6 @@ import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './utils/JwtStrategy';
 import { Module } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
 import { RefreshJwtStrategy } from './utils/RefreshJwtStrategy';
 import { RolesGuard } from './guards/roles/roles.guard';
 import { SessionSerializer } from './utils/Serializer';
@@ -31,10 +30,9 @@ import refreshJwtConfig from './config/refresh-jwt.config';
     RefreshJwtStrategy,
     SessionSerializer,
     {
-      provide: AUTH_SERVICE, //TODO: what is the better approach, like this or the default one
+      provide: AUTH_SERVICE,
       useClass: AuthService,
     },
-    PrismaService, //TODO: is it okay Like this? to place it everytime
     AuthRepository,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },

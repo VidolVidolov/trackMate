@@ -1,29 +1,26 @@
-import { Link, useNavigate } from "react-router";
-
+import { Map } from "components/Map/Map";
+import { getUserParty } from "services/userService";
+import { getUserProfile } from "services/userService";
+import { useEffect } from "react";
+import { useStore } from "zustand";
 import { userStore } from "store/userStore";
-
 export const Home = () => {
-  const navigate = useNavigate();
-  const accessToken = userStore((state) => state.accessToken);
-  const refreshToken = userStore((state) => state.refreshToken);
-  const setAccessToken = userStore((state) => state.setAccessToken);
-  const setRefreshToken = userStore((state) => state.setRefreshToken);
+  const { setUserProfile, setParty } = useStore(userStore);
 
-  const handleLogOut = () => {
-    setAccessToken("");
-    setRefreshToken("");
-    navigate("/login");
+  const fetchUserProfile = async () => {
+    const userProfile = await getUserProfile();
+    if (userProfile) setUserProfile(userProfile);
   };
 
-  return (
-    <>
-      Access TOKEN: {accessToken}
-      Refresh TOKEN: {refreshToken}
-      <div>
-        <Link to="/one">ONE</Link> | <Link to="/two">TWO</Link> |
-        <Link to="/login">LOGIN</Link> |
-        <button onClick={handleLogOut}>LOGOUT</button>
-      </div>
-    </>
-  );
+  const fetchUserParty = async () => {
+    const userParty = await getUserParty();
+    if (userParty) setParty(userParty ?? null);
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+    fetchUserParty();
+  }, []);
+
+  return <Map />;
 };

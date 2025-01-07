@@ -2,7 +2,7 @@ import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { AuthRepository } from './auth.repository';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import { ConfigType } from '@nestjs/config';
 import * as argon2 from 'argon2';
@@ -19,15 +19,12 @@ export class AuthService {
     private userService: UserService,
   ) {}
 
-  async validateUser(userDetails: Omit<User, 'id'>) {
+  async validateUser(userDetails: Prisma.UserCreateInput) {
     const user = await this.userService.findUserByEmail(userDetails.email);
 
     if (user) return user;
 
-    //TODO: what is the better variant  - allocate memory for new variable as its more descriptive or directly return what is returned from the repository?
-    const newUser =
-      await this.authRepository.createUserFromGoogleAuth(userDetails);
-    return newUser;
+    return this.authRepository.createUserFromGoogleAuth(userDetails);
   }
 
   async findUserById(id: number) {
