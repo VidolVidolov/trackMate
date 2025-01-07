@@ -56,17 +56,4 @@ export class PartyController {
       throw new HttpException(error.message, error.status);
     }
   }
-
-  @Post('join/:partyId')
-  async joinParty(
-    @Req() request: RequestWithUser,
-    @Param('partyId') partyId: string,
-  ) {
-    const { id } = request.user;
-    try {
-      return await this.partyService.addMemberToParty(id, Number(partyId));
-    } catch (error) {
-      throw new HttpException(error.message, error.status);
-    }
-  }
 }

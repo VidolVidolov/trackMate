@@ -2,6 +2,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/prisma.module';
+import { InvitationModule } from './invitation/invitation.module';
 import { LocationModule } from './location/location.module';
 import { Module } from '@nestjs/common';
 import { PartyModule } from './party/party.module';
@@ -16,6 +17,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     PartyModule,
     LocationModule,
+    InvitationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
