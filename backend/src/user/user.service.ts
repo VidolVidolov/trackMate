@@ -45,6 +45,7 @@ export class UserService {
   }
 
   async getUserParty(userId: number) {
-    return this.partyService.getPartyByUserId(userId);
+    const userParty = await this.partyService.getPartyByUserId(userId);
+    return userParty;
   }
 }

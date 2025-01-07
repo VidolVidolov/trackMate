@@ -44,7 +44,6 @@ export class UserController {
   @Get('party')
   async getUserParty(@Req() request: RequestWithUser) {
     const { id } = request.user;
-
     return await this.userService.getUserParty(id);
   }
 }

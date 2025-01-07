@@ -22,8 +22,8 @@ export class PartyRepository {
       throw new Error('Owner does not have a location');
     }
 
-    const existingParty = await this.prismaService.party.findUnique({
-      where: { userId },
+    const existingParty = await this.prismaService.party.findFirst({
+      where: { userId, partyDismissed: false },
     });
 
     if (existingParty && !existingParty.partyDismissed) {
@@ -32,7 +32,7 @@ export class PartyRepository {
 
     return this.prismaService.party.create({
       data: {
-        userId: userId,
+        userId,
         timeCreated: new Date(),
         startingLocationId: ownerLocation.id,
         distanceTravelled: 0,
@@ -47,8 +47,8 @@ export class PartyRepository {
   }
 
   async getPartyByUserId(userId: number) {
-    const partyOwnedByUser = await this.prismaService.party.findUnique({
-      where: { userId },
+    const partyOwnedByUser = await this.prismaService.party.findFirst({
+      where: { userId, partyDismissed: false },
       include: {
         members: {
           select: {
@@ -65,5 +65,39 @@ export class PartyRepository {
       },
     });
     return partyOwnedByUser;
+  }
+
+  async dismissParty(partyId: number) {
+    return await this.prismaService.party.update({
+      where: { id: partyId },
+      data: { partyDismissed: true, timeClosed: new Date() },
+    });
+  }
+
+  async getPartyById(partyId: number) {
+    return await this.prismaService.party.findUnique({
+      where: { id: partyId },
+      include: {
+        members: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            typeOfVehicle: true,
+            lastLogin: true,
+            lastKnownLocation: true,
+            partyId: true,
+          },
+        },
+      },
+    });
+  }
+
+  async addMemberToParty(memberId: number, partyId: number) {
+    return await this.prismaService.party.update({
+      where: { id: partyId },
+      data: { members: { connect: { id: memberId } } },
+    });
   }
 }

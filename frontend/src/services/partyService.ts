@@ -12,3 +12,12 @@ export const createParty = async (
     console.log(error);
   }
 };
+
+export const dismissParty = async () => {
+  try {
+    const response = await axiosInstance.post("/party/dismiss");
+    if (response.data) return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

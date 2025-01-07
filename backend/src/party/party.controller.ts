@@ -2,6 +2,7 @@ import {
   Controller,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Req,
 } from '@nestjs/common';
@@ -30,6 +31,29 @@ export class PartyController {
           cause: error.message,
         },
       );
+    }
+  }
+
+  @Post('dismiss')
+  async dismissParty(@Req() request: RequestWithUser) {
+    const { id } = request.user;
+    try {
+      return await this.partyService.dismissParty(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  @Post('add-member/:partyId')
+  async addMemberToParty(
+    @Req() request: RequestWithUser,
+    @Param('partyId') partyId: string,
+  ) {
+    const { id } = request.user;
+    try {
+      return await this.partyService.addMemberToParty(id, Number(partyId));
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
     }
   }
 }

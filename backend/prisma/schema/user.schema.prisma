@@ -10,7 +10,7 @@ model User {
     lastKnownLocation  Location? @relation("LocationToUser")
     party              Party?    @relation(fields: [partyId], references: [id])
     partyId            Int?
-    ownedParty         Party?    @relation("Owner")
+    ownedParty         Party[]   @relation("Owner")
     ownedPartyId       Int?
 }
 

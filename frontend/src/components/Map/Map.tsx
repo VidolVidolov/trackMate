@@ -11,10 +11,11 @@ import { saveUserLocation } from "services/userService";
 
 export const Map = () => {
   const [openInfoBox, setOpenInfoBox] = useState(false);
+
   const [currentLocation, setCurrentLocation] = useState<{
     lat: number;
     lng: number;
-  }>({ lat: 53.54992, lng: 10.00678 });
+  }>({ lat: 0, lng: 0 });
 
   const handleOpenInfoBox = () => setOpenInfoBox(true);
   const handleCloseInfoBox = () => setOpenInfoBox(false);
@@ -38,6 +39,10 @@ export const Map = () => {
 
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
   }, []);
+
+  if (!currentLocation.lat && !currentLocation.lng) {
+    return <span className="loading loading-dots loading-lg"></span>;
+  }
 
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY}>

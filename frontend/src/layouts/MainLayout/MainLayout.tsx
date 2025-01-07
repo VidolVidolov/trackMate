@@ -1,6 +1,7 @@
+import { createParty, dismissParty } from "services/partyService";
+
 import { Logs } from "lucide-react";
 import { X } from "lucide-react";
-import { createParty } from "services/partyService";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import { useStore } from "zustand";
@@ -40,15 +41,16 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const handleDismissParty = () => {
-    console.log("partyDismissed");
+  const handleDismissParty = async () => {
+    await dismissParty();
+    setParty(null);
   };
 
   return (
     <>
       <div className="drawer">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content">
+        <div className="drawer-content flex justify-center align-middle">
           {children}
           <label
             htmlFor="my-drawer"

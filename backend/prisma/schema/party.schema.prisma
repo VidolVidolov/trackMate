@@ -12,5 +12,5 @@ model Party {
     timeTaken          Decimal?
     startingLocationId Int?
     endingLocationId   Int?
-    userId             Int       @unique
+    userId             Int
 }

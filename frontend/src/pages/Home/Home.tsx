@@ -21,5 +21,6 @@ export const Home = () => {
     fetchUserProfile();
     fetchUserParty();
   }, []);
+
   return <Map />;
 };
