@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { PartyService } from 'src/party/party.service';
 import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
 export class UserRepository {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private partyService: PartyService,
+  ) {}
 
   async findUserById(id: number) {
     return await this.prismaService.user.findUnique({
@@ -71,6 +76,19 @@ export class UserRepository {
         where: { id: userId },
         data: { ownedPartyId },
       });
+    } catch (error) {
+      console.log('-------------------');
+      console.log(error);
+      console.log('-------------------');
+    }
+  }
+
+  async getPartyByMemberId(userId: number) {
+    try {
+      const user = await this.findUserById(userId);
+      const partyId = user?.partyId;
+      if (!partyId) throw new NotFoundException('User does not have a party');
+      return await this.partyService.getPartyById(partyId);
     } catch (error) {
       console.log('-------------------');
       console.log(error);

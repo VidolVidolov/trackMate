@@ -11,7 +11,7 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const navigate = useNavigate();
-  const { setParty, party } = useStore(userStore);
+  const { setParty, party, userProfile } = useStore(userStore);
   const [partyName, setPartyName] = useState("");
   const setAccessToken = userStore((state) => state.setAccessToken);
   const setRefreshToken = userStore((state) => state.setRefreshToken);
@@ -42,7 +42,8 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleDismissParty = async () => {
-    await dismissParty();
+    const result = await dismissParty();
+    if ((result && "error" in result) || !result) return;
     setParty(null);
   };
 
@@ -105,12 +106,14 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
                       <p>Distance Travelled: {party.distanceTravelled}</p>
                       <p>Time Taken: {party.timeTaken}</p>
                     </li>
-                    <button
-                      onClick={handleDismissParty}
-                      className="btn btn-secondary m-10"
-                    >
-                      Dismiss Party
-                    </button>
+                    {userProfile && userProfile.id === Number(party.userId) && (
+                      <button
+                        onClick={handleDismissParty}
+                        className="btn btn-secondary m-10"
+                      >
+                        Dismiss Party
+                      </button>
+                    )}
                   </>
                 ) : (
                   <li onClick={handleOpenModal}>

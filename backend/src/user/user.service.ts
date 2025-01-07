@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { PartyService } from 'src/party/party.service';
 import { PrismaService } from 'src/database/prisma.service';
 import { UserRepository } from './user.repository';
@@ -46,6 +47,14 @@ export class UserService {
 
   async getUserParty(userId: number) {
     const userParty = await this.partyService.getPartyByUserId(userId);
+    if (!userParty) {
+      const userMemberParty =
+        await this.userRepository.getPartyByMemberId(userId);
+      if (!userMemberParty) {
+        throw new NotFoundException('User does not have a party');
+      }
+      return userMemberParty;
+    }
     return userParty;
   }
 }

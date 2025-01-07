@@ -34,7 +34,7 @@ export class PartyService {
 
   async dismissParty(userId: number) {
     const userParty = await this.partyRepository.getPartyByUserId(userId);
-    if (userParty?.userId !== userId) {
+    if (userParty?.userId !== userId || !userParty) {
       throw new UnauthorizedException();
     }
     return await this.partyRepository.dismissParty(userParty.id);
@@ -53,5 +53,9 @@ export class PartyService {
       throw new NotFoundException('Member does not exist');
     }
     return this.partyRepository.addMemberToParty(member.id, partyId);
+  }
+
+  async getPartyById(partyId: number) {
+    return this.partyRepository.getPartyById(partyId);
   }
 }

@@ -28,7 +28,6 @@ export class UserController {
   async updateUserLocation(@Req() request: RequestWithUser) {
     const { id } = request.user;
     const body = request.body;
-    //TODO: sanitize inputs
     try {
       const location = await this.locationService.updateLocationForUser(
         id,
