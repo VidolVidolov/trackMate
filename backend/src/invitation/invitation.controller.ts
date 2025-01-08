@@ -32,4 +32,28 @@ export class InvitationController {
       );
     }
   }
+
+  @Post('/accept')
+  async acceptInvitation(@Req() request: RequestWithUser) {
+    const { id } = request.user;
+    const inviteCode = request.body.inviteCode;
+    try {
+      const isValidInvToken =
+        await this.invitationService.validateInvite(inviteCode);
+      if (isValidInvToken) {
+        return await this.invitationService.acceptInvite(inviteCode, id);
+      }
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.METHOD_NOT_ALLOWED,
+          error: error.message,
+        },
+        HttpStatus.METHOD_NOT_ALLOWED,
+        {
+          cause: error.message,
+        },
+      );
+    }
+  }
 }

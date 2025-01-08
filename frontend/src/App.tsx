@@ -15,8 +15,6 @@ function App() {
         <Route element={<TokenLoader />}>
           <Route element={<ProtectedRoute />}>
             <Route index path="/" element={<Home />} />
-            <Route index path="/one" element={<>Try one</>} />
-            <Route index path="/two" element={<>Try two</>} />
           </Route>
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<Login />} />

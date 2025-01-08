@@ -1,5 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-
+import { Injectable } from '@nestjs/common';
 import { PartyService } from 'src/party/party.service';
 import { PrismaService } from 'src/database/prisma.service';
 
@@ -87,12 +86,25 @@ export class UserRepository {
     try {
       const user = await this.findUserById(userId);
       const partyId = user?.partyId;
-      if (!partyId) throw new NotFoundException('User does not have a party');
+      if (!partyId) return null;
       return await this.partyService.getPartyById(partyId);
     } catch (error) {
       console.log('-------------------');
       console.log(error);
       console.log('-------------------');
     }
+  }
+  async removeUserPartyId(userId: number) {
+    return this.prismaService.user.update({
+      where: { id: userId },
+      data: { partyId: null },
+    });
+  }
+
+  async removePartyFromOwner(userId: number) {
+    return this.prismaService.user.update({
+      where: { id: userId },
+      data: { ownedPartyId: null, partyId: null },
+    });
   }
 }

@@ -47,6 +47,7 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
     const result = await dismissParty();
     if ((result && "error" in result) || !result) return;
     setParty(null);
+    setInvitationLink("");
   };
 
   const handleGenerateInvitationLink = async () => {

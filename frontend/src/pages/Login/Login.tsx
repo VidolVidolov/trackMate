@@ -10,10 +10,10 @@ export const Login: React.FC = () => {
       <div className="card w-96 bg-base-100 shadow-2xl rounded-3xl p-6">
         <div className="card-body items-center text-center">
           <h1 className="text-5xl font-extrabold mb-6 text-secondary drop-shadow-lg">
-            Welcome to FuturePortal
+            Welcome to TrackMate
           </h1>
           <p className="text-xl mb-8 text-white">
-            Sign in with Google to explore the future of innovation.
+            Sign in with Google to meet with your ride buddies.
           </p>
 
           <button

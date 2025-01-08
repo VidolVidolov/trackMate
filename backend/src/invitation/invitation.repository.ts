@@ -9,7 +9,7 @@ export class InvitationRepository {
   async createInvitation(partyId: number) {
     const inviteCode = uuid();
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
+    expiresAt.setDate(expiresAt.getDate() + 1);
     return await this.prismaService.invitation.create({
       data: {
         partyId,
