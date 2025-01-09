@@ -12,6 +12,11 @@ export const TokenLoader = () => {
     const accessToken = urlParams.get("token");
     const refreshToken = urlParams.get("refresh");
 
+    const invitationToken = urlParams.get("invite");
+    if (invitationToken) {
+      localStorage.setItem("invitationToken", invitationToken);
+    }
+
     if (accessToken && refreshToken) {
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);

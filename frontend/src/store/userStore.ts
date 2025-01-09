@@ -11,10 +11,12 @@ const userStore: UseBoundStore<
     refreshToken: string;
     userProfile: UserProfileDTO;
     party: PartyDTO;
+    invitationToken: string;
     setAccessToken: (accessToken: string) => void;
     setRefreshToken: (refreshToken: string) => void;
     setUserProfile: (userProfile: UserProfileDTO) => void;
     setParty: (party: PartyDTO) => void;
+    setInvitationToken: (invitationToken: string) => void;
   }>
 > = create(
   devtools((set) => ({
@@ -31,6 +33,9 @@ const userStore: UseBoundStore<
       set(() => ({ userProfile })),
     party: null,
     setParty: (party: PartyDTO) => set(() => ({ party })),
+    invitationToken: "",
+    setInvitationToken: (invitationToken: string) =>
+      set(() => ({ invitationToken })),
   }))
 );
 

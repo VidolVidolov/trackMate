@@ -1,7 +1,8 @@
+import { Copy, X } from "lucide-react";
 import { createParty, dismissParty } from "services/partyService";
 
 import { Logs } from "lucide-react";
-import { X } from "lucide-react";
+import { generateInvitationLink } from "services/invitationService";
 import { useNavigate } from "react-router";
 import { useState } from "react";
 import { useStore } from "zustand";
@@ -13,6 +14,7 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
   const navigate = useNavigate();
   const { setParty, party, userProfile } = useStore(userStore);
   const [partyName, setPartyName] = useState("");
+  const [invitationLink, setInvitationLink] = useState("");
   const setAccessToken = userStore((state) => state.setAccessToken);
   const setRefreshToken = userStore((state) => state.setRefreshToken);
   const handleLogOut = () => {
@@ -45,6 +47,21 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
     const result = await dismissParty();
     if ((result && "error" in result) || !result) return;
     setParty(null);
+    setInvitationLink("");
+  };
+
+  const handleGenerateInvitationLink = async () => {
+    if (party?.id) {
+      const invLink = await generateInvitationLink(party?.id);
+      if (typeof invLink === "object" && "error" in invLink) {
+        return;
+      }
+      setInvitationLink(invLink);
+    }
+  };
+
+  const handleCopyInvitationLink = () => {
+    navigator.clipboard.writeText(invitationLink);
   };
 
   return (
@@ -107,12 +124,27 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({
                       <p>Time Taken: {party.timeTaken}</p>
                     </li>
                     {userProfile && userProfile.id === Number(party.userId) && (
-                      <button
-                        onClick={handleDismissParty}
-                        className="btn btn-secondary m-10"
-                      >
-                        Dismiss Party
-                      </button>
+                      <div>
+                        <button
+                          onClick={handleDismissParty}
+                          className="btn btn-secondary m-10"
+                        >
+                          Dismiss Party
+                        </button>
+                        <button
+                          onClick={handleGenerateInvitationLink}
+                          className="btn btn-secondary mb-10"
+                        >
+                          Generate Invitation Link
+                        </button>
+                        <p
+                          onClick={handleCopyInvitationLink}
+                          className="flex gap-2 align-middle m-5"
+                        >
+                          <Copy />{" "}
+                          {invitationLink ? invitationLink : "Not created yet"}
+                        </p>
+                      </div>
                     )}
                   </>
                 ) : (

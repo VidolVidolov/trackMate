@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class PartyRepository {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    @Inject(forwardRef(() => UserService))
+    private userService: UserService,
+  ) {}
 
   async createParty(userId: number, name: string) {
     const ownerLocation = await this.prismaService.location.findUnique({
@@ -68,10 +73,20 @@ export class PartyRepository {
   }
 
   async dismissParty(partyId: number) {
-    return await this.prismaService.party.update({
+    const dismissedParty = await this.prismaService.party.update({
       where: { id: partyId },
-      data: { partyDismissed: true, timeClosed: new Date() },
+      data: {
+        partyDismissed: true,
+        timeClosed: new Date(),
+      },
+      select: { members: true, owner: true },
     });
+
+    dismissedParty.members.forEach(
+      async (member) => await this.userService.removeUserPartyId(member.id),
+    );
+    await this.userService.removePartyFromOwner(dismissedParty.owner.id);
+    return dismissedParty;
   }
 
   async getPartyById(partyId: number) {
