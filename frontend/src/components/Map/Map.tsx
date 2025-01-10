@@ -8,10 +8,14 @@ import { useEffect, useState } from "react";
 
 import pin from "assets/mapMarker.svg";
 import { saveUserLocation } from "services/userService";
+import { useStore } from "zustand";
+import { useWebsocket } from "hooks/useWebsocket";
+import { userStore } from "store/userStore";
 
 export const Map = () => {
+  useWebsocket();
   const [openInfoBox, setOpenInfoBox] = useState(false);
-
+  const { party } = useStore(userStore);
   const [currentLocation, setCurrentLocation] = useState<{
     lat: number;
     lng: number;
@@ -52,17 +56,30 @@ export const Map = () => {
           defaultZoom={18}
           mapId={import.meta.env.VITE_GOOGLE_MAP_STYLE_ID}
         >
-          <AdvancedMarker
-            position={currentLocation}
-            onClick={handleOpenInfoBox}
-          >
-            <img src={pin} alt="Marker" />
-          </AdvancedMarker>
-          {openInfoBox && (
-            <InfoWindow position={currentLocation} onClose={handleCloseInfoBox}>
-              TEST
-            </InfoWindow>
-          )}
+          {party?.members.map((member) => (
+            <div>
+              <AdvancedMarker
+                position={{
+                  lat: Number(member?.lastKnownLocation.latitude),
+                  lng: Number(member?.lastKnownLocation.longitude),
+                }}
+                onClick={handleOpenInfoBox}
+              >
+                <img src={pin} alt="Marker" />
+              </AdvancedMarker>
+              {openInfoBox && (
+                <InfoWindow
+                  position={{
+                    lat: Number(member?.lastKnownLocation.latitude),
+                    lng: Number(member?.lastKnownLocation.longitude),
+                  }}
+                  onClose={handleCloseInfoBox}
+                >
+                  {member?.name}
+                </InfoWindow>
+              )}
+            </div>
+          ))}
         </GoogleMap>
       </div>
     </APIProvider>
