@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { PartyRepository } from './party.repository';
 import { UserService } from 'src/user/user.service';
+import { SocketService } from 'src/socket/socket.service';
 
 @Injectable()
 export class PartyService {
@@ -15,12 +16,17 @@ export class PartyService {
     private partyRepository: PartyRepository,
     @Inject(forwardRef(() => UserService))
     private userService: UserService,
+    @Inject(forwardRef(() => SocketService))
+    private socketService: SocketService,
   ) {}
 
   async createParty(userId: number, name: string) {
     const party = await this.partyRepository.createParty(userId, name);
     await this.userService.updateUserParty(userId, party.id);
     await this.userService.updateUserOwnedParty(userId, party.id);
+    this.socketService.handlePartyUpdate({
+      partyId: party.id,
+    });
     return party;
   }
 

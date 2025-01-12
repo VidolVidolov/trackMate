@@ -9,6 +9,10 @@ const socket = io(import.meta.env.VITE_BACKEND_WEBSOCKET_URL);
 export const useWebsocket = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const { party, setParty, userProfile } = useStore(userStore);
+  const [userCurrentLocation, setUserCurrentLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  }>();
 
   function onConnect() {
     setIsConnected(true);
@@ -47,7 +51,12 @@ export const useWebsocket = () => {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       };
-      socket.emit("onPartyUpdate", { userId: userProfile?.id, location });
+      setUserCurrentLocation(location);
+      socket.emit("onPartyUpdate", {
+        userId: userProfile?.id,
+        location,
+        partyId: party?.id,
+      });
     };
 
     const errorCallback: PositionErrorCallback = (error) => {
@@ -63,7 +72,7 @@ export const useWebsocket = () => {
     }
 
     return () => navigator.geolocation.clearWatch(watchId);
-  }, [userProfile?.id]);
+  }, [party?.id, userProfile?.id]);
 
-  return { isConnected };
+  return { isConnected, userCurrentLocation };
 };

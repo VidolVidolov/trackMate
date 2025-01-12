@@ -9,4 +9,5 @@ export type UserProfileDTO = {
   lastLogin: Date | null;
   partyId: number | null;
   ownedPartyId: number | null;
+  lastKnownLocation: { la };
 } | null;

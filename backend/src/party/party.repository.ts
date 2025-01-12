@@ -47,7 +47,21 @@ export class PartyRepository {
           connect: [{ id: userId }],
         },
       },
-      include: { owner: true, members: true },
+      include: {
+        owner: true,
+        members: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            typeOfVehicle: true,
+            lastLogin: true,
+            lastKnownLocation: true,
+            partyId: true,
+          },
+        },
+      },
     });
   }
 

@@ -1,8 +1,10 @@
 import axios from "axios";
-import { userStore } from "store/userStore";
 
-const getTokenFromStore = () => {
-  return userStore.getState().accessToken;
+const getTokenFromStore = async () => {
+  const store = await import("store/userStore").then(({ userStore }) => {
+    return userStore;
+  });
+  return store.getState().accessToken;
 };
 
 export const axiosInstance = axios.create({
