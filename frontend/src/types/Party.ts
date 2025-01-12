@@ -1,10 +1,11 @@
+import { MemberDTO } from "./Member";
 import { UserProfileDTO } from "./User";
 
 export type CreatePartyDTO = { name: string };
 
 export type PartyDTO = {
   id: number;
-  members: UserProfileDTO[];
+  members: MemberDTO[];
   owner: UserProfileDTO;
   timeCreated: string;
   timeClosed: string;

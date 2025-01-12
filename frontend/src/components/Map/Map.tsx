@@ -4,43 +4,46 @@ import {
   Map as GoogleMap,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import pin from "assets/mapMarker.svg";
-import { saveUserLocation } from "services/userService";
+import { useStore } from "zustand";
+import { useWebsocket } from "hooks/useWebsocket";
+import { userStore } from "store/userStore";
 
 export const Map = () => {
-  const [openInfoBox, setOpenInfoBox] = useState(false);
-
-  const [currentLocation, setCurrentLocation] = useState<{
-    lat: number;
-    lng: number;
-  }>({ lat: 0, lng: 0 });
-
-  const handleOpenInfoBox = () => setOpenInfoBox(true);
-  const handleCloseInfoBox = () => setOpenInfoBox(false);
-
-  useEffect(() => {
-    const successCallback: PositionCallback = (position) => {
-      const location = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
+  const { userCurrentLocation } = useWebsocket();
+  const [openInfoBox, setOpenInfoBox] = useState<number | null>(null);
+  const { party, userProfile } = useStore(userStore);
+  const userLocation = useMemo(() => {
+    let location = { lat: 0, lng: 0 };
+    if (party) {
+      const memberLocation = party?.members.find(
+        (member) => member?.id === userProfile?.id
+      )?.lastKnownLocation;
+      location = {
+        lat: Number(memberLocation?.latitude ?? 0),
+        lng: Number(memberLocation?.longitude ?? 0),
       };
-      setCurrentLocation({
-        lat: location.latitude,
-        lng: location.longitude,
-      });
-      saveUserLocation(location);
-    };
+    } else {
+      location = {
+        lat: userCurrentLocation?.latitude ?? 0,
+        lng: userCurrentLocation?.longitude ?? 0,
+      };
+    }
+    return location;
+  }, [party, userCurrentLocation, userProfile?.id]);
 
-    const errorCallback: PositionErrorCallback = (error) => {
-      console.error("Error getting location:", error);
-    };
+  const handleOpenInfoBox = (id: number) => setOpenInfoBox(id);
+  const handleCloseInfoBox = () => setOpenInfoBox(null);
 
-    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-  }, []);
+  useEffect(() => {}, [party?.members]);
 
-  if (!currentLocation.lat && !currentLocation.lng) {
+  if (
+    !userProfile?.id ||
+    !userCurrentLocation?.latitude ||
+    !userCurrentLocation?.latitude
+  ) {
     return <span className="loading loading-dots loading-lg"></span>;
   }
 
@@ -48,20 +51,63 @@ export const Map = () => {
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY}>
       <div className="w-screen h-screen">
         <GoogleMap
-          defaultCenter={currentLocation}
+          defaultCenter={{
+            lat: userLocation.lat,
+            lng: userLocation.lng,
+          }}
           defaultZoom={18}
           mapId={import.meta.env.VITE_GOOGLE_MAP_STYLE_ID}
         >
-          <AdvancedMarker
-            position={currentLocation}
-            onClick={handleOpenInfoBox}
-          >
-            <img src={pin} alt="Marker" />
-          </AdvancedMarker>
-          {openInfoBox && (
-            <InfoWindow position={currentLocation} onClose={handleCloseInfoBox}>
-              TEST
-            </InfoWindow>
+          {party ? (
+            party?.members.map((member) => (
+              <div key={member?.id}>
+                <AdvancedMarker
+                  position={{
+                    lat: Number(member?.lastKnownLocation.latitude),
+                    lng: Number(member?.lastKnownLocation.longitude),
+                  }}
+                  onClick={() =>
+                    member?.id ? handleOpenInfoBox(member.id) : null
+                  }
+                >
+                  <img src={pin} alt="Marker" />
+                </AdvancedMarker>
+                {openInfoBox === member?.id && (
+                  <InfoWindow
+                    position={{
+                      lat: Number(member?.lastKnownLocation.latitude),
+                      lng: Number(member?.lastKnownLocation.longitude),
+                    }}
+                    onClose={handleCloseInfoBox}
+                  >
+                    {member?.name}
+                  </InfoWindow>
+                )}
+              </div>
+            ))
+          ) : (
+            <div>
+              <AdvancedMarker
+                position={{
+                  lat: userLocation.lat,
+                  lng: userLocation.lng,
+                }}
+                onClick={() => handleOpenInfoBox(userProfile.id)}
+              >
+                <img src={pin} alt="Marker" />
+              </AdvancedMarker>
+              {openInfoBox && (
+                <InfoWindow
+                  position={{
+                    lat: userLocation.lat,
+                    lng: userLocation.lng,
+                  }}
+                  onClose={handleCloseInfoBox}
+                >
+                  {userProfile?.name}
+                </InfoWindow>
+              )}
+            </div>
           )}
         </GoogleMap>
       </div>

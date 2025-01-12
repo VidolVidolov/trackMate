@@ -1,13 +1,15 @@
-export type UserProfileDTO = {
+export type MemberDTO = {
   id: number;
   name: string;
   email: string;
   role: "USER" | "ADMIN";
-  hashedRefreshToken: string | null;
   typeOfVehicle: string | null;
-  createdAt: Date | null;
   lastLogin: Date | null;
   partyId: number | null;
-  ownedPartyId: number | null;
-  lastKnownLocation: { la };
+  lastKnownLocation: {
+    id: number;
+    longitude: string;
+    latitude: string;
+    userId: string;
+  };
 } | null;
