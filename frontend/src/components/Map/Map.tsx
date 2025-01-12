@@ -92,7 +92,7 @@ export const Map = () => {
                   lat: userLocation.lat,
                   lng: userLocation.lng,
                 }}
-                onClick={handleOpenInfoBox}
+                onClick={() => handleOpenInfoBox(userProfile.id)}
               >
                 <img src={pin} alt="Marker" />
               </AdvancedMarker>
