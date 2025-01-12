@@ -43,7 +43,11 @@ export class PartyService {
     if (userParty?.userId !== userId || !userParty) {
       throw new UnauthorizedException();
     }
-    return await this.partyRepository.dismissParty(userParty.id);
+    const dismissedParty = await this.partyRepository.dismissParty(
+      userParty.id,
+    );
+    await this.socketService.handlePartyUpdate(null);
+    return dismissedParty;
   }
 
   async addMemberToParty(memberId: number, partyId: number) {

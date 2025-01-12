@@ -38,8 +38,11 @@ export class SocketService implements OnModuleInit {
         longitude: number;
       };
       partyId?: number;
-    },
+    } | null,
   ) {
+    if (!message) {
+      return this.sendMessage(null);
+    }
     if (message.userId && message.location) {
       await this.locationService.updateLocationForUser(
         message.userId,

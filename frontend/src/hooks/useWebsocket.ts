@@ -24,6 +24,8 @@ export const useWebsocket = () => {
 
   const onPartyUpdate = useCallback(
     (value: PartyDTO) => {
+      console.log(value);
+
       setParty(value);
     },
     [setParty]
