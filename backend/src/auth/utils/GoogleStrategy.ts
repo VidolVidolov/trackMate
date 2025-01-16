@@ -8,6 +8,8 @@ import { Role } from '@prisma/client';
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor(@Inject('AUTH_SERVICE') private authService: AuthService) {
+    console.log(process.env.GOOGLE_OAUTH_CLIENT_ID);
+
     super({
       clientID: process.env.GOOGLE_OAUTH_CLIENT_ID,
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
