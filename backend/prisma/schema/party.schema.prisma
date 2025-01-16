@@ -1,17 +1,17 @@
 model Party {
-    id                 Int          @id @unique @default(autoincrement())
-    name               String       @default("")
-    members            User[]
-    startingLocation   Location?    @relation("StartingLocation", fields: [startingLocationId], references: [id])
-    endingLocation     Location?    @relation("EndingLocation", fields: [endingLocationId], references: [id])
-    owner              User         @relation("Owner", fields: [userId], references: [id])
-    timeCreated        DateTime
-    timeClosed         DateTime?
-    partyDismissed     Boolean      @default(false)
-    distanceTravelled  Decimal?
-    timeTaken          Decimal?
-    startingLocationId Int?
-    endingLocationId   Int?
-    userId             Int
-    invitations        Invitation[]
+  id                 Int          @id @unique @default(autoincrement())
+  timeCreated        DateTime
+  timeClosed         DateTime?
+  partyDismissed     Boolean      @default(false)
+  distanceTravelled  Decimal?
+  timeTaken          Decimal?
+  startingLocationId Int?
+  endingLocationId   Int?
+  userId             Int
+  name               String       @default("")
+  invitations        Invitation[]
+  endingLocation     Location?    @relation("EndingLocation", fields: [endingLocationId], references: [id])
+  startingLocation   Location?    @relation("StartingLocation", fields: [startingLocationId], references: [id])
+  owner              User         @relation("Owner", fields: [userId], references: [id])
+  members            User[]
 }

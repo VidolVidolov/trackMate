@@ -1,20 +1,20 @@
 model User {
-    id                 Int       @id @unique @default(autoincrement())
-    name               String
-    email              String    @unique
-    role               Role      @default(USER)
-    hashedRefreshToken String?
-    typeOfVehicle      String?
-    createdAt          DateTime? @default(now())
-    lastLogin          DateTime? @default(now())
-    lastKnownLocation  Location? @relation("LocationToUser")
-    party              Party?    @relation(fields: [partyId], references: [id])
-    partyId            Int?
-    ownedParty         Party[]   @relation("Owner")
-    ownedPartyId       Int?
+  name               String
+  email              String    @unique
+  createdAt          DateTime? @default(now())
+  lastLogin          DateTime? @default(now())
+  typeOfVehicle      String?
+  hashedRefreshToken String?
+  role               Role      @default(USER)
+  partyId            Int?
+  id                 Int       @id @unique @default(autoincrement())
+  ownedPartyId       Int?
+  lastKnownLocation  Location? @relation("LocationToUser")
+  ownedParty         Party[]   @relation("Owner")
+  party              Party?    @relation(fields: [partyId], references: [id])
 }
 
 enum Role {
-    USER
-    ADMIN
+  USER
+  ADMIN
 }

@@ -1,7 +1,7 @@
 model Invitation {
-    id         Int       @id @unique @default(autoincrement())
-    partyId    Int
-    party      Party     @relation(fields: [partyId], references: [id])
-    inviteCode String    @unique
-    expiresAt  DateTime?
+  id         Int       @id @unique @default(autoincrement())
+  partyId    Int
+  inviteCode String    @unique
+  expiresAt  DateTime?
+  party      Party     @relation(fields: [partyId], references: [id])
 }

@@ -9,13 +9,19 @@ import { forwardRef, Inject, OnModuleInit } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { LocationService } from 'src/location/location.service';
 import { PartyService } from 'src/party/party.service';
+import { MessageBodyType } from './types/PartyUpdateMessageBody';
+import { ConfigService } from '@nestjs/config';
+import { config } from 'dotenv';
 
-@WebSocketGateway(3002, { cors: 'http://localhost:5173/' })
+config({ path: `${process.cwd()}/.env.${process.env.NODE_ENV}` });
+
+@WebSocketGateway(3002, { cors: process.env.SOCKET_CORS_LINK })
 export class SocketService implements OnModuleInit {
   constructor(
     private locationService: LocationService,
     @Inject(forwardRef(() => PartyService))
     private partyService: PartyService,
+    private configService: ConfigService,
   ) {}
 
   @WebSocketServer()
@@ -23,22 +29,14 @@ export class SocketService implements OnModuleInit {
 
   onModuleInit() {
     this.server.on('connection', (socket) => {
-      //   console.log(socket.id);
-      //   console.log('Connected');
+      console.log(`Connection with id: ${socket.id} established`);
     });
   }
 
   @SubscribeMessage('onPartyUpdate')
   async handlePartyUpdate(
     @MessageBody()
-    message: {
-      userId?: number;
-      location?: {
-        latitude: number;
-        longitude: number;
-      };
-      partyId?: number;
-    } | null,
+    message: MessageBodyType,
   ) {
     if (!message) {
       return this.sendMessage(null);
@@ -56,7 +54,7 @@ export class SocketService implements OnModuleInit {
     this.sendMessage(updatedParty);
   }
 
-  sendMessage(message: unknown) {
+  sendMessage(message: MessageBodyType) {
     this.server.emit('onPartyUpdate', message);
   }
 }
