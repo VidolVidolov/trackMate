@@ -1,9 +1,9 @@
 model Location {
-    id                    Int     @id @unique @default(autoincrement())
-    longitude             Decimal
-    latitude              Decimal
-    user                  User?   @relation("LocationToUser", fields: [userId], references: [id])
-    userId                Int?    @unique
-    partyStartingLocation Party[] @relation("StartingLocation")
-    partyEndingLocation   Party[] @relation("EndingLocation")
+  id                    Int     @id @unique @default(autoincrement())
+  longitude             Decimal
+  latitude              Decimal
+  userId                Int?    @unique
+  user                  User?   @relation("LocationToUser", fields: [userId], references: [id])
+  partyEndingLocation   Party[] @relation("EndingLocation")
+  partyStartingLocation Party[] @relation("StartingLocation")
 }
