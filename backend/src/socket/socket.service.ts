@@ -10,10 +10,9 @@ import { Server } from 'socket.io';
 import { LocationService } from 'src/location/location.service';
 import { PartyService } from 'src/party/party.service';
 import { MessageBodyType } from './types/PartyUpdateMessageBody';
-import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 
-config({ path: `${process.cwd()}/.env.${process.env.NODE_ENV}` });
+config();
 
 @WebSocketGateway(3002, { cors: process.env.SOCKET_CORS_LINK })
 export class SocketService implements OnModuleInit {
@@ -21,7 +20,6 @@ export class SocketService implements OnModuleInit {
     private locationService: LocationService,
     @Inject(forwardRef(() => PartyService))
     private partyService: PartyService,
-    private configService: ConfigService,
   ) {}
 
   @WebSocketServer()

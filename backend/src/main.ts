@@ -3,10 +3,8 @@ import * as session from 'express-session';
 
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
-import { config } from 'dotenv';
 
 async function bootstrap() {
-  config({ path: `${process.cwd()}/.env.${process.env.NODE_ENV}` });
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
   app.enableCors();
