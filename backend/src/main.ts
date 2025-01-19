@@ -3,6 +3,7 @@ import * as session from 'express-session';
 
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
+import store from './sessionStore';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +11,7 @@ async function bootstrap() {
   app.enableCors();
   app.use(
     session({
+      store,
       secret: process.env.SESSION_SALT!,
       saveUninitialized: false,
       resave: false,
