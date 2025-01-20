@@ -13,4 +13,7 @@ export default defineConfig({
       "@": path.join(__dirname, "src/"),
     },
   },
+  preview: {
+    port: 8080,
+  },
 });
