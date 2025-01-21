@@ -16,12 +16,14 @@ import { GoogleAuthGuard } from './guards/google-auth/google-auth.guard';
 import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth/refresh-jwt-auth.guard';
 import { RequestWithUser } from './types/RequestWithUser';
 import { UserService } from 'src/user/user.service';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     @Inject(AUTH_SERVICE) private authService: AuthService,
     private userService: UserService,
+    private config: ConfigService,
   ) {}
 
   @Get('/google/login')
@@ -51,7 +53,7 @@ export class AuthController {
     response
       .status(200)
       .redirect(
-        `http://localhost:5173?token=${accessToken}&refresh=${refreshToken}`,
+        `http://${this.config.get('FRONT_END_LINK')}?token=${accessToken}&refresh=${refreshToken}`,
       );
   }
 

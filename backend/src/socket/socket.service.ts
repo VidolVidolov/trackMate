@@ -14,7 +14,7 @@ import { config } from 'dotenv';
 
 config();
 
-@WebSocketGateway(3002, { cors: process.env.SOCKET_CORS_LINK })
+@WebSocketGateway(3002, { cors: process.env.FRONT_END_LINK })
 export class SocketService implements OnModuleInit {
   constructor(
     private locationService: LocationService,
