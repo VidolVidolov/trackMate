@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
+import { ConfigService } from '@nestjs/config';
 import { InvitationRepository } from './invitation.repository';
 import { PartyService } from 'src/party/party.service';
 
@@ -13,6 +14,7 @@ export class InvitationService {
   constructor(
     private invitationRepository: InvitationRepository,
     private partyService: PartyService,
+    private config: ConfigService,
   ) {}
 
   async createInvitation(partyId: number, userId: number) {
@@ -20,7 +22,7 @@ export class InvitationService {
     if (party?.userId !== userId)
       throw new UnauthorizedException('User does not own the party');
     const invite = await this.invitationRepository.createInvitation(partyId);
-    return `http://localhost:5173?invite=${invite.inviteCode}`;
+    return `http://${this.config.get('FRONT_END_LINK')}?invite=${invite.inviteCode}`;
   }
 
   async validateInvite(inviteCode: string) {
