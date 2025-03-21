@@ -2,7 +2,7 @@ import React from "react";
 
 export const Login: React.FC = () => {
   const handleGoogleLogin = () => {
-    window.location.href = `http://${
+    window.location.href = `${
       import.meta.env.VITE_BACKEND_BASE_URL
     }/api/auth/google/login`;
   };
