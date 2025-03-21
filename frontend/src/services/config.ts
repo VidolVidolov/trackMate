@@ -8,7 +8,7 @@ const getTokenFromStore = async () => {
 };
 
 export const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
+  baseURL: `${import.meta.env.VITE_BACKEND_BASE_URL}/api`,
   validateStatus: () => true,
   headers: { Authorization: `Bearer ${getTokenFromStore()}` },
 });

@@ -53,7 +53,7 @@ export class AuthController {
     response
       .status(200)
       .redirect(
-        `http://${this.config.get('FRONT_END_LINK')}?token=${accessToken}&refresh=${refreshToken}`,
+        `${this.config.get('FRONT_END_LINK')}?token=${accessToken}&refresh=${refreshToken}`,
       );
   }
 
