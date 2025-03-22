@@ -4,7 +4,7 @@ import {
   Map as GoogleMap,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import pin from "assets/mapMarker.svg";
 import { useStore } from "zustand";
@@ -36,8 +36,6 @@ export const Map = () => {
 
   const handleOpenInfoBox = (id: number) => setOpenInfoBox(id);
   const handleCloseInfoBox = () => setOpenInfoBox(null);
-
-  useEffect(() => {}, [party?.members]);
 
   if (
     !userProfile?.id ||

@@ -22,7 +22,7 @@ export class InvitationService {
     if (party?.userId !== userId)
       throw new UnauthorizedException('User does not own the party');
     const invite = await this.invitationRepository.createInvitation(partyId);
-    return `http://${this.config.get('FRONT_END_LINK')}?invite=${invite.inviteCode}`;
+    return `${this.config.get('FRONT_END_LINK')}?invite=${invite.inviteCode}`;
   }
 
   async validateInvite(inviteCode: string) {
