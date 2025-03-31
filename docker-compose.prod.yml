@@ -1,0 +1,9 @@
+services:
+  client:
+    image: client-prod-i
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: client-prod-c
+    ports:
+      - 8080:80
