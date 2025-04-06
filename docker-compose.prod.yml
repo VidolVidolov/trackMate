@@ -1,4 +1,16 @@
 services:
+  backend:
+    image: backend-prod-i
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: backend-prod-c
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    env_file:
+      - ./backend/.env
   client:
     image: client-prod-i
     build:
@@ -7,3 +19,17 @@ services:
     container_name: client-prod-c
     ports:
       - 8080:80
+  db:
+    container_name: db-prod-c
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - ./backend/pgdata:/var/lib/postgresql/data
+    ports:
+      - ${DB_PORT}:5432
+    env_file:
+      - .env
