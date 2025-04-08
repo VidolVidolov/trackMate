@@ -9,14 +9,6 @@ RUN apt-get update && apt-get install -y curl gnupg && \
 
 RUN node -v && npm -v && nginx -v && npm config get registry
 
-WORKDIR /client
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY . .
-
 RUN addgroup --system nginx && adduser --system --no-create-home --ingroup nginx nginx
 
 RUN mkdir -p /var/lib/nginx /var/lib/nginx/body \
@@ -27,12 +19,18 @@ RUN mkdir -p /var/lib/nginx /var/lib/nginx/body \
 
 RUN sed -i '/^user/d' /etc/nginx/nginx.conf
 
+WORKDIR /client
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN chown -R nginx:nginx /client/node_modules
+
 USER nginx
 
-EXPOSE 3333
 EXPOSE 5173
 
-
-CMD ["nginx", "-g", "daemon off;"]
-# CMD ["nginx", "-g", "daemon off;", "npm", "run", "dev"] with forward porting 5173:5173
-
+CMD [ "npm", "run", "dev:container" ]
