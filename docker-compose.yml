@@ -7,7 +7,7 @@ services:
     container_name: client-dev-c
     volumes:
       - ./frontend:/client
-      - frontend_node_modules:/client/node_modules/
+      - /client/node_modules/
     ports:
       - 5173:5173
   backend:
@@ -18,7 +18,7 @@ services:
     container_name: backend-dev-c
     volumes:
       - ./backend:/backend
-      - backend_node_modules:/client/node_modules/
+      - /backend/node_modules/
     ports:
       - 3000:3000
       - 3002:3002
@@ -40,6 +40,3 @@ services:
       - ${DB_PORT}:5432
     env_file:
       - .env
-volumes: 
-  frontend_node_modules:
-  backend_node_modules:

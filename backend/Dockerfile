@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:22-alpine
 
 WORKDIR /backend
 
@@ -6,16 +6,12 @@ RUN apk add --no-cache openssl
 
 COPY package*.json ./
 
-RUN npm install
-
-RUN npm install -g @nestjs/cli
-
 COPY prisma ./prisma/
-
-RUN npx prisma generate
 
 COPY . .
 
+RUN npm install
+
 USER node
 
-CMD ["npm", "run", "start:dev"]
+CMD ["sh", "-c", "npm run start:dev"]
