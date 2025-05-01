@@ -1,4 +1,3 @@
-test gitlab connection
 # trackMate
 
 ##Architecture
