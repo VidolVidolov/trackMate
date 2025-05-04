@@ -24,10 +24,6 @@ after_script:
 # Build Frontend
 build-frontend:
   stage: build
-  artifacts:
-    paths:
-      - frontend/dist
-    expire_in: 1 week
   script:
     - docker build -t $REGISTRY/frontend:$DEFAULT_TAG -t $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA} ./frontend
 
@@ -43,10 +39,6 @@ push-frontend:
 # Build Backend
 build-backend:
   stage: build
-  artifacts:
-    paths:
-      - backend/dist
-    expire_in: 1 week
   script:
     - docker build -t $REGISTRY/backend:$DEFAULT_TAG -t $REGISTRY/backend:${CI_COMMIT_SHORT_SHA} ./backend
 
