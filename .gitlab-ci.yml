@@ -1,29 +1,26 @@
 image: docker:stable
 
 services:
-  - docker:28.1.1-dind-rootless
+  - name: docker:28.1.1-dind
+    alias: docker
 
 stages:
   - build
   - push
 
 variables:
-  IMAGE_NAME: trackMate
+  IMAGE_NAME: registry.gitlab.com/<your-group>/<your-project>/trackMate
   DEFAULT_TAG: latest
-  DOCKER_HOST: tcp://127.0.0.1:2375
+  DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
-  DOCKER_REGISTRY: $DOCKER_REGISTRY
-  DOCKER_REGISTRY_TOKEN_RW: $AUTH_TOKEN_USER
-  DOCKER_REGISTRY_USER_RW: $DOCKER_REGISTRY_USER_RW
 
-# before_script:
-#   - echo -n $CI_REGISTRY_USER | docker login --username $DOCKER_REGISTRY_USER_RW --password-stdin $DOCKER_REGISTRY
+before_script:
+  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
 
-# after_script:
-#   - docker logout $DOCKER_REGISTRY
+after_script:
+  - docker logout registry.gitlab.com
 
-#production image
 build-image:
   stage: build
   artifacts:
