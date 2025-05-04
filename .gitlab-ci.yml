@@ -9,7 +9,7 @@ stages:
   - push
 
 variables:
-  IMAGE_NAME: registry.gitlab.com/vivividolov-group/trackMate
+  IMAGE_NAME: registry.gitlab.com/vivividolov-group/track-mate
   DEFAULT_TAG: latest
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
