@@ -1,7 +1,7 @@
 image: docker:stable
 
 default:
-  tags: [ tags ]
+  tags: [ trackmate-runner ]
 
 services:
   - docker:28.1.1-dind-rootless
