@@ -9,11 +9,11 @@ stages:
   - push
 
 variables:
-  IMAGE_NAME: registry.gitlab.com/vivividolov-group/track-mate
-  DEFAULT_TAG: latest
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
+  DEFAULT_TAG: latest
+  REGISTRY: registry.gitlab.com/vivividolov-group/track-mate
 
 before_script:
   - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
@@ -21,19 +21,40 @@ before_script:
 after_script:
   - docker logout registry.gitlab.com
 
-build-image:
+# Build Frontend
+build-frontend:
   stage: build
   artifacts:
     paths:
-      - dist
+      - frontend/dist
     expire_in: 1 week
   script:
-    - docker build --tag $IMAGE_NAME:$DEFAULT_TAG --tag $IMAGE_NAME:${CI_COMMIT_SHORT_SHA} --network host --file ./Dockerfile --rm .
+    - docker build -t $REGISTRY/frontend:$DEFAULT_TAG -t $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA} ./frontend
 
-push-image:
+# Push Frontend
+push-frontend:
   stage: push
   dependencies:
-    - build-image
+    - build-frontend
   script:
-    - docker push $IMAGE_NAME:${CI_COMMIT_SHORT_SHA}
-    - docker push $IMAGE_NAME:$DEFAULT_TAG
+    - docker push $REGISTRY/frontend:$DEFAULT_TAG
+    - docker push $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA}
+
+# Build Backend
+build-backend:
+  stage: build
+  artifacts:
+    paths:
+      - backend/dist
+    expire_in: 1 week
+  script:
+    - docker build -t $REGISTRY/backend:$DEFAULT_TAG -t $REGISTRY/backend:${CI_COMMIT_SHORT_SHA} ./backend
+
+# Push Backend
+push-backend:
+  stage: push
+  dependencies:
+    - build-backend
+  script:
+    - docker push $REGISTRY/backend:$DEFAULT_TAG
+    - docker push $REGISTRY/backend:${CI_COMMIT_SHORT_SHA}
