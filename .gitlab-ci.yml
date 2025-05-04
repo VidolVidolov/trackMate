@@ -8,17 +8,18 @@ stages:
   - push
 
 variables:
-  IMAGE_NAME: trackMate_TEST_IMAGE_NAME
-  IMAGE_FILE_NAME: trackMateTestFileName.tar 
+  IMAGE_NAME: trackMate
   DEFAULT_TAG: latest
-
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_REGISTRY: registry.gitlab.com
+  DOCKER_REGISTRY_TOKEN_RW: dckr_pat_upFFFXwhUXdb9_y5FSG8KWeebYI
+  DOCKER_REGISTRY_USER_RW: vidol
 
 before_script:
   - echo -n $DOCKER_REGISTRY_TOKEN_RW | docker login --username $DOCKER_REGISTRY_USER_RW --password-stdin $DOCKER_REGISTRY
 
 after_script:
   - docker logout $DOCKER_REGISTRY
-
 
 #production image
 build-image:
