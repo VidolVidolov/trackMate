@@ -1,8 +1,5 @@
 image: docker:stable
 
-default:
-  tags: [ trackmate-runner ]
-
 services:
   - docker:28.1.1-dind-rootless
 
@@ -11,13 +8,9 @@ stages:
   - push
 
 variables:
-  DOCKER_HOST: tcp://127.0.0.1:2375
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: ""
   IMAGE_NAME: trackMate_TEST_IMAGE_NAME
   IMAGE_FILE_NAME: trackMateTestFileName.tar 
   DEFAULT_TAG: latest
-
 
 
 before_script:
