@@ -18,7 +18,7 @@ variables:
   DOCKER_REGISTRY_USER_RW: $DOCKER_REGISTRY_USER_RW
 
 before_script:
-  - echo -n "$CI_JOB_TOKEN" | docker login --username $DOCKER_REGISTRY_USER_RW --password-stdin $DOCKER_REGISTRY
+  - echo -n $CI_REGISTRY_USER | docker login --username $DOCKER_REGISTRY_USER_RW --password-stdin $DOCKER_REGISTRY
 
 after_script:
   - docker logout $DOCKER_REGISTRY
