@@ -5,8 +5,7 @@ services:
     alias: docker
 
 stages:
-  - build
-  - push
+  - build-and-push
 
 variables:
   DOCKER_HOST: tcp://docker:2375
@@ -16,37 +15,23 @@ variables:
   REGISTRY: registry.gitlab.com/vivividolov-group/track-mate
 
 before_script:
-  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
+  - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $REGISTRY
 
 after_script:
-  - docker logout registry.gitlab.com
+  - docker logout $REGISTRY
 
-# Build Frontend
-build-frontend:
-  stage: build
+# Frontend build + push
+frontend:
+  stage: build-and-push
   script:
     - docker build -t $REGISTRY/frontend:$DEFAULT_TAG -t $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA} ./frontend
-
-# Push Frontend
-push-frontend:
-  stage: push
-  dependencies:
-    - build-frontend
-  script:
     - docker push $REGISTRY/frontend:$DEFAULT_TAG
     - docker push $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA}
 
-# Build Backend
-build-backend:
-  stage: build
+# Backend build + push
+backend:
+  stage: build-and-push
   script:
     - docker build -t $REGISTRY/backend:$DEFAULT_TAG -t $REGISTRY/backend:${CI_COMMIT_SHORT_SHA} ./backend
-
-# Push Backend
-push-backend:
-  stage: push
-  dependencies:
-    - build-backend
-  script:
     - docker push $REGISTRY/backend:$DEFAULT_TAG
     - docker push $REGISTRY/backend:${CI_COMMIT_SHORT_SHA}
