@@ -5,7 +5,8 @@ services:
     alias: docker
 
 stages:
-  - build-and-push
+  - build
+  - push
 
 variables:
   DOCKER_HOST: tcp://docker:2375
@@ -20,18 +21,34 @@ before_script:
 after_script:
   - docker logout $REGISTRY
 
-# Frontend build + push
-frontend:
-  stage: build-and-push
+build-frontend:
+  stage: build
   script:
     - docker build -t $REGISTRY/frontend:$DEFAULT_TAG -t $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA} ./frontend
+  artifacts:
+    name: frontend-image
+    paths: []
+    expire_in: 1 hour
+
+build-backend:
+  stage: build
+  script:
+    - docker build -t $REGISTRY/backend:$DEFAULT_TAG -t $REGISTRY/backend:${CI_COMMIT_SHORT_SHA} ./backend
+  artifacts:
+    name: backend-image
+    paths: []
+    expire_in: 1 hour
+
+push-frontend:
+  stage: push
+  needs: [build-frontend]
+  script:
     - docker push $REGISTRY/frontend:$DEFAULT_TAG
     - docker push $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA}
 
-# Backend build + push
-backend:
-  stage: build-and-push
+push-backend:
+  stage: push
+  needs: [build-backend]
   script:
-    - docker build -t $REGISTRY/backend:$DEFAULT_TAG -t $REGISTRY/backend:${CI_COMMIT_SHORT_SHA} ./backend
     - docker push $REGISTRY/backend:$DEFAULT_TAG
     - docker push $REGISTRY/backend:${CI_COMMIT_SHORT_SHA}
