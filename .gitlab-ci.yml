@@ -6,14 +6,16 @@ services:
 
 stages:
   - build
+  - test
   - push
 
 variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
-  DEFAULT_TAG: latest
   REGISTRY: registry.gitlab.com/vivividolov-group/trackmate
+  DEFAULT_TAG: latest
+  TEMP_TAG: temp-${CI_COMMIT_SHORT_SHA}
 
 before_script:
   - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $REGISTRY
@@ -21,34 +23,52 @@ before_script:
 after_script:
   - docker logout $REGISTRY
 
+# ---------- FRONTEND JOBS ----------
+
 build-frontend:
   stage: build
   script:
-    - docker build -t $REGISTRY/frontend:$DEFAULT_TAG -t $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA} ./frontend
-  artifacts:
-    name: frontend-image
-    paths: []
-    expire_in: 1 hour
+    - docker build -t $REGISTRY/frontend:$TEMP_TAG ./frontend
+    - docker push $REGISTRY/frontend:$TEMP_TAG
+
+test-frontend:
+  stage: test
+  needs: [build-frontend]
+  script:
+    - docker pull $REGISTRY/frontend:$TEMP_TAG
+    - docker run --rm $REGISTRY/frontend:$TEMP_TAG npm test
+
+push-frontend:
+  stage: push
+  needs: [test-frontend]
+  script:
+    - docker pull $REGISTRY/frontend:$TEMP_TAG
+    - docker tag $REGISTRY/frontend:$TEMP_TAG $REGISTRY/frontend:$DEFAULT_TAG
+    - docker tag $REGISTRY/frontend:$TEMP_TAG $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA}
+    - docker push $REGISTRY/frontend:$DEFAULT_TAG
+    - docker push $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA}
+
+# ---------- BACKEND JOBS ----------
 
 build-backend:
   stage: build
   script:
-    - docker build -t $REGISTRY/backend:$DEFAULT_TAG -t $REGISTRY/backend:${CI_COMMIT_SHORT_SHA} ./backend
-  artifacts:
-    name: backend-image
-    paths: []
-    expire_in: 1 hour
+    - docker build -t $REGISTRY/backend:$TEMP_TAG ./backend
+    - docker push $REGISTRY/backend:$TEMP_TAG
 
-push-frontend:
-  stage: push
-  needs: [build-frontend]
+test-backend:
+  stage: test
+  needs: [build-backend]
   script:
-    - docker push $REGISTRY/frontend:$DEFAULT_TAG
-    - docker push $REGISTRY/frontend:${CI_COMMIT_SHORT_SHA}
+    - docker pull $REGISTRY/backend:$TEMP_TAG
+    - docker run --rm $REGISTRY/backend:$TEMP_TAG npm test
 
 push-backend:
   stage: push
-  needs: [build-backend]
+  needs: [test-backend]
   script:
+    - docker pull $REGISTRY/backend:$TEMP_TAG
+    - docker tag $REGISTRY/backend:$TEMP_TAG $REGISTRY/backend:$DEFAULT_TAG
+    - docker tag $REGISTRY/backend:$TEMP_TAG $REGISTRY/backend:${CI_COMMIT_SHORT_SHA}
     - docker push $REGISTRY/backend:$DEFAULT_TAG
     - docker push $REGISTRY/backend:${CI_COMMIT_SHORT_SHA}
