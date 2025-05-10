@@ -36,6 +36,7 @@ test-frontend:
   needs: [build-frontend]
   script:
     - docker pull $REGISTRY/frontend:$TEMP_TAG
+    - docker run --rm $REGISTRY/frontend:$TEMP_TAG whoami
     - docker run --rm $REGISTRY/frontend:$TEMP_TAG npm test
 
 push-frontend:
