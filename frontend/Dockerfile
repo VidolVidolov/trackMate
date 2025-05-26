@@ -27,7 +27,7 @@ RUN npm install
 
 COPY . .
 
-RUN chown -R nginx:nginx /client/node_modules
+RUN chown -R nginx:nginx /client
 
 USER nginx
 
