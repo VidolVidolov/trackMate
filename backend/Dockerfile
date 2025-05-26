@@ -12,6 +12,8 @@ COPY . .
 
 RUN npm install
 
+RUN chown -R node:node /backend
+
 USER node
 
 CMD ["sh", "-c", "npm run start:dev"]
