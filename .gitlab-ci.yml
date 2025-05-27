@@ -17,10 +17,6 @@ variables:
   REGISTRY: registry.gitlab.com/vivividolov-group/trackmate
   DEFAULT_TAG: latest
   TEMP_TAG: temp-${CI_COMMIT_SHORT_SHA}
-  AWS_DEFAULT_REGION: eu-north-1
-  ECS_CLUSTER: trackMate-cluster
-  ECS_BACKEND_SERVICE: backend-task-service-z9868nej
-  ECS_FRONTEND_SERVICE: frontend-task-service-3hbrhorr
 
 before_script:
   - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $REGISTRY
@@ -84,11 +80,12 @@ deploy-to-ecs:
   stage: deploy
   image: amazon/aws-cli
   needs:
-    - job: push-frontend
-    - job: push-backend
+    - push-frontend
+    - push-backend
   script:
-    - echo "$ECS_CLUSTER"
-    - echo "$ECS_BACKEND_SERVICE"
-    - echo "$ECS_FRONTEND_SERVICE"
+    - echo "ECS_CLUSTER = [$ECS_CLUSTER]"
+    - echo "ECS_BACKEND_SERVICE = [$ECS_BACKEND_SERVICE]"
+    - echo "ECS_FRONTEND_SERVICE = [$ECS_FRONTEND_SERVICE]"
+    - aws sts get-caller-identity
     - aws ecs update-service --cluster "$ECS_CLUSTER" --service "$ECS_BACKEND_SERVICE" --force-new-deployment
     - aws ecs update-service --cluster "$ECS_CLUSTER" --service "$ECS_FRONTEND_SERVICE" --force-new-deployment
