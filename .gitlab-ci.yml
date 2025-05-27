@@ -78,14 +78,10 @@ push-backend:
 
 deploy-to-ecs:
   stage: deploy
-  image: amazon/aws-cli
-  needs:
-    - push-frontend
-    - push-backend
+  image: 
+    name: amazon/aws-cli
+    entrypoint: [""]
   script:
-    - echo "ECS_CLUSTER = [$ECS_CLUSTER]"
-    - echo "ECS_BACKEND_SERVICE = [$ECS_BACKEND_SERVICE]"
-    - echo "ECS_FRONTEND_SERVICE = [$ECS_FRONTEND_SERVICE]"
     - aws sts get-caller-identity
-    - aws ecs update-service --cluster "$ECS_CLUSTER" --service "$ECS_BACKEND_SERVICE" --force-new-deployment
-    - aws ecs update-service --cluster "$ECS_CLUSTER" --service "$ECS_FRONTEND_SERVICE" --force-new-deployment
+    - aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_BACKEND_SERVICE --force-new-deployment
+    - aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_FRONTEND_SERVICE --force-new-deployment
