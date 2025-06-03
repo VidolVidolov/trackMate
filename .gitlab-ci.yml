@@ -29,10 +29,6 @@ after_script:
 build-frontend:
   stage: build
   script:
-    - echo "VITE_GOOGLE_API_KEY=$VITE_GOOGLE_API_KEY" > ./frontend/.env
-    - echo "VITE_GOOGLE_MAP_STYLE_ID=$VITE_GOOGLE_MAP_STYLE_ID" >> ./frontend/.env
-    - echo "VITE_BACKEND_BASE_URL=$VITE_BACKEND_BASE_URL" >> ./frontend/.env
-    - echo "VITE_BACKEND_WEBSOCKET_URL=$VITE_BACKEND_WEBSOCKET_URL" >> ./frontend/.env
     - docker build -t $REGISTRY/frontend:$TEMP_TAG ./frontend
     - docker push $REGISTRY/frontend:$TEMP_TAG
 
@@ -58,25 +54,6 @@ push-frontend:
 build-backend:
   stage: build
   script:
-    - echo "BACKEND_PORT=$BACKEND_PORT" > ./backend/.env
-    - echo "DB_USERNAME=$DB_USERNAME" >> ./backend/.env
-    - echo "DB_PASSWORD=$DB_PASSWORD" >> ./backend/.env
-    - echo "DB_NAME=$DB_NAME" >> ./backend/.env
-    - echo "DB_PORT=$DB_PORT" >> ./backend/.env
-    - echo "DB_HOST=$DB_HOST" >> ./backend/.env
-    - echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> ./backend/.env
-    - echo "DATABASE_URL=postgresql://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public" >> ./backend/.env
-    - echo "GOOGLE_OAUTH_CLIENT_ID=$GOOGLE_OAUTH_CLIENT_ID" >> ./backend/.env
-    - echo "GOOGLE_OAUTH_CLIENT_SECRET=$GOOGLE_OAUTH_CLIENT_SECRET" >> ./backend/.env
-    - echo "GOOGLE_OAUTH_CALLBACK_URL=$GOOGLE_OAUTH_CALLBACK_URL" >> ./backend/.env
-    - echo "GOOGLE_OAUTH_SCOPE_ONE=$GOOGLE_OAUTH_SCOPE_ONE" >> ./backend/.env
-    - echo "GOOGLE_OAUTH_SCOPE_TWO=$GOOGLE_OAUTH_SCOPE_TWO" >> ./backend/.env
-    - echo "SESSION_SALT=$SESSION_SALT" >> ./backend/.env
-    - echo "JWT_ACCESS_TOKEN=$JWT_ACCESS_TOKEN" >> ./backend/.env
-    - echo "JWT_ACCESS_TOKEN_DURATION=$JWT_ACCESS_TOKEN_DURATION" >> ./backend/.env
-    - echo "JWT_REFRESH_TOKEN=$JWT_REFRESH_TOKEN" >> ./backend/.env
-    - echo "JWT_REFRESH_TOKEN_DURATION=$JWT_REFRESH_TOKEN_DURATION" >> ./backend/.env
-    - echo "FRONT_END_LINK=$FRONT_END_LINK" >> ./backend/.env
     - docker build -t $REGISTRY/backend:$TEMP_TAG ./backend
     - docker push $REGISTRY/backend:$TEMP_TAG
 
